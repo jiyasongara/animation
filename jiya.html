@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<style>
+body{
+    margin:0; overflow:hidden;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    font-family: Arial, sans-serif;
+    color:white; text-align:center;
+    display:flex; justify-content:center; align-items:center;
+    height:100vh;
+}
+.screen{display:none; z-index:2;}
+.screen.active{display:block;}
+h1{font-size:2.3em; text-shadow:0 0 10px rgba(0,0,0,0.3);}
+button{
+    padding:10px 25px; font-size:1.1em; border:none; border-radius:25px;
+    cursor:pointer; margin:10px; background:white; color:#ff4f7a;
+}
+
+/* Hearts */
+.heart{
+    position:absolute; color:red; font-size:24px;
+    animation: floatUp 6s linear infinite; opacity:0.8;
+}
+@keyframes floatUp{
+    0%{transform:translateY(0) scale(1); opacity:1;}
+    100%{transform:translateY(-100vh) scale(1.5); opacity:0;}
+}
+
+/* Gift */
+.gift{
+    width:150px; height:150px; margin:20px auto;
+    background:#ff4f7a; border-radius:10px; position:relative; cursor:pointer;
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
+}
+.gift:before{content:""; position:absolute; width:20px; height:150px; background:#fff; left:65px; top:0;}
+.gift:after{content:""; position:absolute; width:150px; height:20px; background:#fff; top:65px; left:0;}
+.letter{
+    display:none; background:white; color:#333; padding:20px; border-radius:10px;
+    max-width:80vw; margin:20px auto;
+}
+
+/* Stack cards */
+.stack{
+    position:relative;
+    width:80vw; max-width:400px;
+    height:70vh; max-height:500px;
+    margin:auto;
+}
+.card{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    margin:auto;
+    border-radius:20px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    touch-action:none;
+}
+.card img, .card video{
+    max-width:100%;
+    max-height:100%;
+    border-radius:20px;
+}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart"; h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=(20+Math.random()*30)+"px";
+  h.style.animationDuration=(4+Math.random()*4)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}
+setInterval(createHeart,300);
+</script>
+
+<!-- Screens -->
+<div class="screen active" id="s1">
+  <h1>Hy baby 👋</h1>
+  <button onclick="startMusic(); go(2)">Hy</button>
+</div>
+
+<div class="screen" id="s2">
+  <h1>Do you love me ❤️</h1>
+  <button onclick="go(3)">Yes</button>
+  <button id="noBtn">No</button>
+</div>
+
+<div class="screen" id="s3">
+  <h1>I love you too 😘❤️</h1>
+  <button onclick="go(4)">Next</button>
+</div>
+
+<div class="screen" id="s4">
+  <h1>I have a gift for you 🎁</h1>
+  <button onclick="go(5)">Next</button>
+</div>
+
+<div class="screen" id="s5">
+  <h1>Open your gift 🎁</h1>
+  <div class="gift" onclick="openGift()"></div>
+  <div class="letter" id="letter">
+    <h3>✍️🙈</h3>
+    <p>
+            You are not just a part of my life, you are my happiness, my smile, and my peace.  
+      Every moment with you feels special, and every day with you feels like a blessing.  
+      Thank you for being with me, for understanding me, and for loving me the way you do.  
+      I promise to care for you, respect you, and always stand by you.  
+      You mean a lot to me, today and always. 💖
+    </p>
+  </div>
+  <button onclick="go(6)">Next</button>
+</div>
+
+<div class="screen" id="s6">
+  <h1>I have something more ✨</h1>
+  <button onclick="go(7)">Next</button>
+</div>
+
+<!-- Stack Photos + Video -->
+<div class="screen" id="s7">
+  <div class="stack" id="stack">
+    <div class="card"><img src="photo1.jpeg"></div>
+    <div class="card"><img src="photo2.jpeg"></div>
+    <div class="card"><img src="photo3.jpeg"></div>
+    <div class="card"><img src="photo4.jpeg"></div>
+    <div class="card"><img src="photo5.jpeg"></div>
+    <div class="card"><img src="photo6.jpeg"></div>
+    <div class="card"><img src="photo7.jpeg"></div>
+    <div class="card"><img src="photo8.jpeg"></div>
+    <div class="card"><img src="photo9.jpeg"></div>
+    <div class="card" id="videoCard"><video src="video .mp4" controls></video></div>
+  </div>
+</div>
+
+<script>
+function startMusic(){
+  const m=document.getElementById("bgMusic");
+  m.play().catch(()=>{});
+}
+function stopMusic(){
+  const m=document.getElementById("bgMusic");
+  m.pause();
+}
+function go(n){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("s"+n).classList.add("active");
+}
+
+// No button runs away 😄
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", ()=>{
+  const x=Math.random()*(window.innerWidth-100);
+  const y=Math.random()*(window.innerHeight-50);
+  noBtn.style.left=x+"px";
+  noBtn.style.top=y+"px";
+});
+
+// Gift
+function openGift(){
+  document.getElementById("letter").style.display="block";
+}
+
+// Swipe cards
+const stack = document.getElementById("stack");
+let cards = stack.querySelectorAll(".card");
+
+cards.forEach((card, index) => {
+  let startX = 0, currentX = 0, dragging = false;
+  card.style.zIndex = cards.length - index;
+
+  card.addEventListener("mousedown", startDrag);
+  card.addEventListener("touchstart", startDrag);
+
+  function startDrag(e){
+    dragging = true;
+    startX = e.touches ? e.touches[0].clientX : e.clientX;
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("touchmove", drag);
+    document.addEventListener("mouseup", endDrag);
+    document.addEventListener("touchend", endDrag);
+  }
+
+  function drag(e){
+    if(!dragging) return;
+    currentX = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
+    card.style.transform = `translateX(${currentX}px) rotate(${currentX/10}deg)`;
+  }
+
+  function endDrag(){
+    dragging = false;
+    if(Math.abs(currentX) > 120){
+      card.style.transition = "0.5s";
+      card.style.transform = `translateX(${currentX>0?1000:-1000}px) rotate(${currentX/10}deg)`;
+      setTimeout(()=>{
+        // If this is video card, stop music and play video sound
+        if(card.id === "videoCard"){
+          stopMusic();
+          const v = card.querySelector("video");
+          v.play();
+        }
+        card.remove();
+      },500);
+    } else {
+      card.style.transition = "0.3s";
+      card.style.transform = "translateX(0)";
+    }
+    document.removeEventListener("mousemove", drag);
+    document.removeEventListener("touchmove", drag);
+    document.removeEventListener("mouseup", endDrag);
+    document.removeEventListener("touchend", endDrag);
+  }
+});
+</script>
+
+</body>
+</html>
+
